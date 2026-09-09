@@ -3022,4 +3022,78 @@
     initApp();
   }
 
+
+  // LIVE RAILRADAR AUTO-REFRESH
+  // Refresh train 12919 every 20 seconds.
+  let liveRefreshInProgress = false;
+
+  async function refreshLiveTrain() {
+    if (liveRefreshInProgress) return;
+    if (appState.currentTrainId !== "12919") return;
+    if (!window.RailwayETA.loadLiveTrain) return;
+
+    liveRefreshInProgress = true;
+
+    try {
+      const liveTrain =
+        await window.RailwayETA.loadLiveTrain("12919");
+
+      appState.currentTrainId = liveTrain.id;
+      appState.currentTrain = liveTrain;
+
+      appState.currentStationIndex =
+        liveTrain.currentStatusDefaults.currentStationIndex || 0;
+
+      appState.liveInputs.currentDelay =
+        liveTrain.currentStatusDefaults.baseDelayMins || 0;
+
+      if (simulation) {
+        simulation.setTrain(
+          liveTrain,
+          appState.currentStationIndex
+        );
+      }
+
+      backendETA = null;
+
+      const nextStation =
+        liveTrain.stations[
+          appState.currentStationIndex + 1
+        ];
+
+      if (nextStation && window.TrainAPI) {
+        try {
+          backendETA =
+            await window.TrainAPI.getTrainETA(
+              liveTrain.number,
+              nextStation.code
+            );
+        } catch (error) {
+          console.warn(
+            "Live ETA refresh failed:",
+            error
+          );
+        }
+      }
+
+      updateDashboard();
+
+      console.log(
+        "LIVE REFRESH:",
+        liveTrain.current_location,
+        liveTrain.currentStatusDefaults.baseDelayMins
+      );
+
+    } catch (error) {
+      console.warn(
+        "RailRadar live refresh failed:",
+        error
+      );
+    } finally {
+      liveRefreshInProgress = false;
+    }
+  }
+
+  setInterval(refreshLiveTrain, 20000);
+
 })();
