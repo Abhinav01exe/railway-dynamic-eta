@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdaptRail | AI Railway ETA Prediction & Live Running Status</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="top-navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-group">
+        <div class="brand-logo">🚆</div>
+        <div>
+          <div class="brand-title">Adapt<span>Rail</span></div>
+        </div>
+        <span class="brand-badge">AI TELEMETRY</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="nav-links">
+        <a href="#liveStatusSection" class="nav-link active">Live Running Status</a>
+        <a href="#schematicSection" class="nav-link">Signal Schematic</a>
+        <a href="#metricsSection" class="nav-link">AI Analytics</a>
+        <a href="#feedbackSection" class="nav-link">Reviews &amp; Thanks 💖</a>
+      </nav>
+
+      <!-- Right Actions: Auth Profile & Mobile Drawer Toggle -->
+      <div class="nav-right-actions">
+        <a href="AdaptRail-Website.zip" download="AdaptRail-Website.zip" class="btn-download-zip" title="Download Complete Website Source Code (.ZIP)">
+          <span>⬇️</span> Download Code (.ZIP)
+        </a>
+
+        <!-- Auth Area populated via auth.js -->
+        <div id="navbarAuthArea"></div>
+
+        <button id="btnToggleControls" class="btn-mobile-controls" title="Toggle Live Scenario Controls">
+          ⚙️ Controls
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Search & Autocomplete Section -->
+  <section class="hero-search-section">
+    <div class="hero-search-container">
+      <div class="hero-tagline">⚡ Real-Time Predictive Telemetry • RunningStatus Engine</div>
+      <h1 class="hero-main-heading">Live Train Status & <span>Dynamic ETA Prediction</span></h1>
+      
+      <!-- Search Bar with Instant Autocomplete -->
+      <div class="search-bar-wrapper">
+        <div class="search-input-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="heroSearchInput" 
+            class="hero-search-input" 
+            placeholder="Search train by number, name, or station (e.g. 12302, Rajdhani, Vande Bharat, Kanpur)..."
+            autocomplete="off"
+          >
+          <button class="btn-search-submit" type="button">Track Train</button>
+        </div>
+
+        <!-- Autocomplete Suggestions Dropdown -->
+        <div id="searchSuggestions" class="search-suggestions-box hidden"></div>
+      </div>
+
+      <!-- Trending Popular Trains -->
+      <div class="trending-pills-row">
+        <span class="trending-label">Popular Routes:</span>
+        <button class="trending-pill" data-train-id="12302">12302 Howrah Rajdhani</button>
+        <button class="trending-pill" data-train-id="22436">22436 Vande Bharat Exp</button>
+        <button class="trending-pill" data-train-id="12952">12952 Mumbai Tejas</button>
+        <button class="trending-pill" data-train-id="12626">12626 Kerala Express</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <main class="main-layout" id="liveStatusSection">
+    
+    <!-- Train Header Hero Section -->
+    <section id="trainHeaderInfo" class="train-header-card">
+      <!-- Populated via renderers.js -->
+    </section>
+
+    <!-- Live Status Banner (runningstatus.in style) -->
+    <section id="liveBannerCard">
+      <!-- Populated via renderers.js -->
+    </section>
+
+    <!-- Main Dashboard Grid: Side Animation Track + Timetable + Analytics/Controls -->
+    <div class="dashboard-grid">
+      
+      <!-- Column 1: Dedicated Animated Side Rail Corridor -->
+      <aside id="sideRailAnimationContainer">
+        <!-- Rendered via renderers.js with live speed sync -->
+      </aside>
+
+      <!-- Column 2: Track Block Schematic & Vertical Timetable -->
+      <div class="left-col" id="schematicSection">
+        
+        <!-- Track & Signalling Block SVG Diagram -->
+        <div id="trackSchematicSvgContainer" class="schematic-card">
+          <!-- Rendered via renderers.js -->
+        </div>
+
+        <!-- Station-by-Station Running Status Timetable -->
+        <div class="timeline-section-card">
+          <div class="timeline-header-bar">
+            <h2 class="timeline-title">📍 LIVE STATION-BY-STATION STATUS & DYNAMIC ETAs</h2>
+            <div class="timeline-legend">
+              <span class="legend-item"><span class="dot-passed"></span> Passed</span>
+              <span class="legend-item"><span class="dot-current"></span> Current</span>
+              <span class="legend-item"><span class="dot-upcoming"></span> Next ETAs</span>
+            </div>
+          </div>
+
+          <!-- Vertical Timeline List -->
+          <div id="stationTimelineList" class="station-timeline-container">
+            <!-- Populated via renderers.js -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Column 3: Predictive Analytics & Interactive Scenario Drawer -->
+      <aside class="right-col">
+        
+        <!-- Route Selection Quick Dropdown -->
+        <div class="form-group" style="margin-bottom: 8px;">
+          <label for="trainSelect" style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">
+            🚆 Active Route Switcher:
+          </label>
+          <select id="trainSelect" class="form-select" style="font-weight: 600; background: var(--bg-card);">
+            <!-- Populated dynamically via trains.js -->
+          </select>
+        </div>
+
+        <!-- Prediction Confidence Gauge -->
+        <div id="confidenceGaugeContainer">
+          <!-- Rendered via renderers.js -->
+        </div>
+
+        <!-- Dynamic Delay Contribution Waterfall -->
+        <div id="delayWaterfallContainer">
+          <!-- Rendered via renderers.js -->
+        </div>
+
+        <!-- Interactive Scenario Simulator Card / Drawer -->
+        <div id="scenarioControlsPanel" class="scenario-panel">
+          <div class="panel-title-bar">
+            <h3 class="panel-title">🕹️ LIVE DISTURBANCE & INPUT SIMULATOR</h3>
+            <button id="btnCloseDrawer" class="btn-close-drawer">✕</button>
+          </div>
+
+          <!-- Preset 1-Click Real-World Scenarios -->
+          <div class="presets-section">
+            <div class="section-sublabel">QUICK REAL-WORLD SCENARIOS</div>
+            <div class="preset-button-grid">
+              <button class="btn-preset" data-preset="ideal">☀️ Ideal On-Time</button>
+              <button class="btn-preset" data-preset="winterFog">🌫️ Winter Fog Crisis</button>
+              <button class="btn-preset" data-preset="signalFail">🚦 Junction Signal Fail</button>
+              <button class="btn-preset" data-preset="freightAhead">🐢 Slow Freight Ahead</button>
+              <button class="btn-preset" data-preset="speedRecovery" style="grid-column: span 2;">⚡ High-Speed Slack Recovery</button>
+            </div>
+          </div>
+
+          <!-- Resettable Live Inputs Form -->
+          <div class="controls-form">
+            
+            <!-- 1. Current Delay Slider -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <span>⏱️ Current Station Delay</span>
+                <span id="currentDelayVal" class="value-badge">+24 min</span>
+              </div>
+              <input type="range" id="currentDelayInput" class="slider-input" min="-10" max="180" step="1" value="24">
+            </div>
+
+            <!-- 2. Weather Impact -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <span>🌧️ Weather Conditions</span>
+              </div>
+              <div class="weather-btn-group">
+                <button class="weather-btn active" data-weather="clear">☀️ Clear</button>
+                <button class="weather-btn" data-weather="rain">🌧️ Rain</button>
+                <button class="weather-btn" data-weather="fog">🌫️ Fog</button>
+                <button class="weather-btn" data-weather="storm">⛈️ Storm</button>
+              </div>
+            </div>
+
+            <!-- 3. Signal Delay Slider -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <span>🚦 Extra Signal Hold</span>
+                <span id="signalDelayVal" class="value-badge">+5 min</span>
+              </div>
+              <input type="range" id="signalDelayInput" class="slider-input" min="0" max="45" step="1" value="5">
+            </div>
+
+            <!-- 4. Section Congestion Slider -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <span>🚧 Track Congestion Level</span>
+                <span id="congestionVal" class="value-badge">90% (Normal)</span>
+              </div>
+              <input type="range" id="congestionInput" class="slider-input" min="50" max="180" step="5" value="90">
+            </div>
+
+            <!-- 5. Speed Restrictions (TSR/PSR) -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <span>🐢 Speed Restrictions (TSR)</span>
+              </div>
+              <select id="tsrSelect" class="form-select">
+                <option value="none">None (Full MPS Allowed)</option>
+                <option value="tsr50">50 km/h TSR (Bridge Maintenance)</option>
+                <option value="tsr30">30 km/h TSR (Track Renewal Zone)</option>
+                <option value="multiple">Multiple TSRs (+24m Penalty)</option>
+              </select>
+            </div>
+
+            <!-- 6. Preceding Train Gap -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <span>🚆 Preceding Train Headway</span>
+              </div>
+              <select id="gapSelect" class="form-select">
+                <option value="clear">Clear Line (>15 km Ahead - Green)</option>
+                <option value="moderate">Moderate Gap (~8.5 km - Double Yellow)</option>
+                <option value="close">Close Tail (~3.8 km - Caution Yellow)</option>
+                <option value="blocking">Stalled Train Ahead (<1.5 km - Red Danger)</option>
+              </select>
+            </div>
+
+            <!-- 7. Historical Bias -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <span>📊 Historical Delay Pattern Bias</span>
+              </div>
+              <div class="bias-radio-group">
+                <label class="bias-label">
+                  <input type="radio" name="historicalBias" value="optimistic"> Optimistic
+                </label>
+                <label class="bias-label">
+                  <input type="radio" name="historicalBias" value="average" checked> Average
+                </label>
+                <label class="bias-label">
+                  <input type="radio" name="historicalBias" value="pessimistic"> Pessimistic
+                </label>
+              </div>
+            </div>
+
+            <!-- Reset & Random Chaos Actions -->
+            <div class="action-btn-row">
+              <button id="btnResetDefaults" class="btn-action btn-reset" title="Reset to standard scheduled run">
+                🔄 Reset Inputs
+              </button>
+              <button id="btnRandomChaos" class="btn-action btn-chaos" title="Simulate unexpected railway disturbances">
+                🎲 Random Chaos
+              </button>
+            </div>
+
+            <!-- Live Track Advance Simulation -->
+            <div class="playback-bar">
+              <div class="section-sublabel">LIVE JOURNEY PLAYBACK</div>
+              <div class="playback-controls">
+                <button id="btnSimPlay" class="btn-sim-play">▶️ Play Live Track</button>
+                <button id="btnSimStep" class="btn-sim-step" title="Advance to next station">⏭️ Next Stn</button>
+              </div>
+              <div class="speed-selector">
+                <span>Sim Speed:</span>
+                <button class="sim-speed-btn active" data-speed="1">1x</button>
+                <button class="sim-speed-btn" data-speed="5">5x</button>
+                <button class="sim-speed-btn" data-speed="20">20x</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- AI Metrics Highlights Section -->
+  <section class="metrics-section" id="metricsSection">
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-val">99.4%</div>
+        <div class="metric-title">Model Punctuality Accuracy</div>
+        <div class="metric-desc">P50 arrival window confidence across golden quadrilateral routes.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">1,450+</div>
+        <div class="metric-title">Daily Route KMs Tracked</div>
+        <div class="metric-desc">Real-time GPS telemetry calibrated with block section headway.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">&lt; 30s</div>
+        <div class="metric-title">Telemetry Refresh Rate</div>
+        <div class="metric-desc">Live signal aspects and speed restriction synchronization.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">7-Factor</div>
+        <div class="metric-title">Dynamic Delay Modeler</div>
+        <div class="metric-desc">Physics, weather, TSR, signals, congestion & scheduled slack.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Thank You & Commuter Feedback Section (Replaces FAQ) -->
+  <section class="thankyou-feedback-section" id="feedbackSection">
+    <div class="thankyou-container">
+      
+      <!-- Top Cute Thank You Banner & Animated Kawaii Train Stage -->
+      <div class="thank-you-banner" id="thankYouAnimationBanner">
+        <div class="banner-badge">💖 COMMUTER LOVE &amp; GRATITUDE 💖</div>
+        <h2 class="thank-you-heading">Thank You for Riding with AdaptRail!</h2>
+        <p class="thank-you-sub">
+          Thousands of daily passengers rely on our real-time ETA predictions and dynamic delay intelligence. We're honored to accompany your journey across Indian Railways!
+        </p>
+
+        <!-- Cute Animated Kawaii Train & Conductor Stage -->
+        <div class="cute-train-stage">
+          <div class="stage-sky">
+            <span class="sky-star s-1">✨</span>
+            <span class="sky-star s-2">🌟</span>
+            <span class="sky-star s-3">✨</span>
+          </div>
+
+          <!-- Animated Kawaii Train Assembly -->
+          <div class="kawaii-train-assembly">
+            <!-- Heart Steam Puffs Floating Up -->
+            <div class="steam-puffs-container">
+              <span class="heart-steam hs-1">💖</span>
+              <span class="heart-steam hs-2">💕</span>
+              <span class="heart-steam hs-3">✨</span>
+              <span class="heart-steam hs-4">💗</span>
+            </div>
+
+            <!-- Train Locomotive & Coach -->
+            <div class="kawaii-train-units">
+              <!-- Locomotive -->
+              <div class="kawaii-loco">
+                <div class="loco-chimney"></div>
+                <div class="loco-cab">
+                  <div class="cab-window">
+                    <span class="waving-conductor" title="Happy Station Master / Driver waving!">🐻👋</span>
+                  </div>
+                </div>
+                <div class="loco-front">
+                  <div class="train-face">
+                    <span class="t-eye"></span>
+                    <span class="t-blush"></span>
+                    <span class="t-smile"></span>
+                    <span class="t-blush"></span>
+                    <span class="t-eye"></span>
+                  </div>
+                  <div class="train-headlight"></div>
+                  <div class="train-cowcatcher"></div>
+                </div>
+                <div class="train-wheels">
+                  <span class="wheel-spin">⚙️</span>
+                  <span class="wheel-spin">⚙️</span>
+                  <span class="wheel-spin">⚙️</span>
+                </div>
+              </div>
+
+              <!-- Coach -->
+              <div class="kawaii-coach">
+                <div class="coach-roof"></div>
+                <div class="coach-body">
+                  <div class="coach-windows">
+                    <span class="passengers">🐱🐰🐶</span>
+                  </div>
+                  <div class="coach-sign">ADAPTRAIL EXPRESS 🌸</div>
+                </div>
+                <div class="coach-wheels">
+                  <span class="wheel-spin">⚙️</span>
+                  <span class="wheel-spin">⚙️</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Track rails & ties -->
+            <div class="kawaii-rail-track">
+              <div class="rail-line"></div>
+              <div class="rail-ties"></div>
+            </div>
+          </div>
+
+          <!-- Cute Floating Badges -->
+          <div class="cute-floating-stickers">
+            <span class="cute-sticker sticker-1">🎯 99.4% Time Slot Accuracy</span>
+            <span class="cute-sticker sticker-2">❤️ Trusted by Daily Commuters</span>
+            <span class="cute-sticker sticker-3">🌈 Safe &amp; Happy Journeys</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rating & Comments Interactive Card -->
+      <div class="feedback-grid">
+        <!-- Left Column: Interactive 5-Star Rating & Review Submission -->
+        <div class="feedback-card interactive-rating-card">
+          <div class="card-chip">⭐ RATE YOUR EXPERIENCE</div>
+          <h3 class="feedback-card-title">How was your ETA tracking experience?</h3>
+          <p class="feedback-card-sub">
+            Your feedback helps our AI calibration engine optimize real-time delay buffers and arrival slots.
+          </p>
+
+          <!-- 5-Star Interactive Rating -->
+          <div class="rating-picker-wrapper">
+            <div class="interactive-stars-row" id="interactiveRatingBox">
+              <button type="button" class="rating-star-btn active" data-star="1" aria-label="1 star">★</button>
+              <button type="button" class="rating-star-btn active" data-star="2" aria-label="2 stars">★</button>
+              <button type="button" class="rating-star-btn active" data-star="3" aria-label="3 stars">★</button>
+              <button type="button" class="rating-star-btn active" data-star="4" aria-label="4 stars">★</button>
+              <button type="button" class="rating-star-btn active" data-star="5" aria-label="5 stars">★</button>
+            </div>
+            <div class="rating-sentiment-label" id="ratingSentimentText">5/5 - Loved AdaptRail! Exceptional! 💖🚂</div>
+          </div>
+
+          <!-- Commuter Comment Submission Form -->
+          <form id="formCommuterReview" class="commuter-review-form">
+            <div class="form-field">
+              <label for="reviewAuthorName">Your Name / Handle</label>
+              <input 
+                type="text" 
+                id="reviewAuthorName" 
+                class="review-input" 
+                placeholder="e.g. Priya Sharma" 
+                required
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="reviewCommentInput">Your Comment / Suggestion</label>
+              <textarea 
+                id="reviewCommentInput" 
+                class="review-textarea" 
+                rows="3" 
+                placeholder="Share your experience with arrival time slots, winter fog alerts, or junction signals..."
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit-review">
+              <span>Post Review &amp; Send Love</span>
+              <span>💌</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Right Column: Live Community Reviews Feed -->
+        <div class="feedback-card reviews-feed-card">
+          <div class="feed-header">
+            <div>
+              <div class="card-chip">💬 COMMUTER EXPERIENCES</div>
+              <h3 class="feedback-card-title">Recent Feedback from Travelers</h3>
+            </div>
+            <div class="live-pulse-indicator">
+              <span class="live-dot"></span> Live Feed
+            </div>
+          </div>
+
+          <div class="reviews-list-container" id="commuterReviewsList">
+            <!-- Dynamically populated by setupRatingAndReviews() -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand-text">
+        <strong>AdaptRail</strong> — Intelligent Indian Railways Telemetry &amp; Dynamic ETA Platform.
+        <div class="footer-disclaimer">
+          Data synchronized with simulated NTES/CRIS telemetry models. Designed for operational awareness, predictive journey planning, and commuter convenience.
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <a href="#liveStatusSection" class="footer-link">Live Status</a>
+        <a href="#metricsSection" class="footer-link">AI Analytics</a>
+        <a href="#feedbackSection" class="footer-link">Reviews &amp; Thanks 💖</a>
+        <a href="AdaptRail-Website.zip" download="AdaptRail-Website.zip" class="footer-link download-pill">⬇️ Download Code (.ZIP)</a>
+        <a href="#" class="footer-link" onclick="window.AdaptRail &amp;&amp; window.AdaptRail.openAuthModal('signin'); return false;">Sign In</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= AUTHENTICATION MODAL (RunningStatus.in style) ================= -->
+  <div id="authModalOverlay" class="modal-overlay hidden">
+    <div class="modal-card">
+      <button id="btnCloseAuthModal" class="btn-close-modal">✕</button>
+      
+      <div class="modal-header">
+        <div class="modal-logo">🚆</div>
+        <h3 class="modal-title">Welcome to AdaptRail</h3>
+        <p class="modal-subtext">Sign in to save favorite trains and receive live delay alerts.</p>
+        <div id="authModalNotice" class="modal-notice hidden"></div>
+      </div>
+
+      <!-- Modal Tabs: Sign In vs Create Free Account -->
+      <div class="modal-tabs">
+        <button id="tabSignIn" class="modal-tab-btn active">Sign In</button>
+        <button id="tabSignUp" class="modal-tab-btn">Create Free Account</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- 1-Click Social & Demo Logins -->
+        <div class="social-auth-box">
+          <button class="btn-google-auth" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            Continue with Google
+          </button>
+          
+          <button class="btn-demo-auth" type="button">
+            ⚡ 1-Click Instant Demo Login (Rajesh Sharma)
+          </button>
+        </div>
+
+        <div class="auth-divider">
+          <span>or use email</span>
+        </div>
+
+        <!-- Form 1: Sign In -->
+        <form id="formSignIn" class="modal-form">
+          <div class="form-field">
+            <label for="signInEmail">Email Address</label>
+            <input type="email" id="signInEmail" class="form-input" placeholder="name@example.com" required value="traveler@example.com">
+          </div>
+          <div class="form-field">
+            <label for="signInPassword">Password</label>
+            <input type="password" id="signInPassword" class="form-input" placeholder="••••••••" required value="adaptrail123">
+          </div>
+          <div class="form-row-between">
+            <label class="remember-label">
+              <input type="checkbox" checked> Remember me
+            </label>
+            <a href="#" class="forgot-link" onclick="alert('Password reset link has been dispatched to your email.'); return false;">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn-modal-submit">Sign In to AdaptRail</button>
+        </form>
+
+        <!-- Form 2: Create Account -->
+        <form id="formSignUp" class="modal-form hidden">
+          <div class="form-field">
+            <label for="signUpName">Full Name</label>
+            <input type="text" id="signUpName" class="form-input" placeholder="e.g. Ramesh Chandra" required>
+          </div>
+          <div class="form-field">
+            <label for="signUpEmail">Email Address</label>
+            <input type="email" id="signUpEmail" class="form-input" placeholder="name@example.com" required>
+          </div>
+          <div class="form-field">
+            <label for="signUpPassword">Create Password</label>
+            <input type="password" id="signUpPassword" class="form-input" placeholder="At least 8 characters" required>
+          </div>
+          <button type="submit" class="btn-modal-submit">Create Free Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= WATCHLIST MODAL ================= -->
+  <div id="watchlistModalOverlay" class="modal-overlay hidden">
+    <div class="modal-card">
+      <button id="btnCloseWatchlistModal" class="btn-close-modal">✕</button>
+      <div class="modal-header">
+        <div class="modal-logo">⭐</div>
+        <h3 class="modal-title">My Saved Trains</h3>
+        <p class="modal-subtext">Click on any train to jump directly to its live status.</p>
+      </div>
+      <div class="modal-body">
+        <div id="watchlistItemsContainer" class="watchlist-items-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DELAY ALERTS MODAL ================= -->
+  <div id="alertsModalOverlay" class="modal-overlay hidden">
+    <div class="modal-card">
+      <button id="btnCloseAlertsModal" class="btn-close-modal">✕</button>
+      <div class="modal-header">
+        <div class="modal-logo">🔔</div>
+        <h3 class="modal-title">Live Delay Alerts</h3>
+        <p class="modal-subtext">Set thresholds to be notified when your train exceeds delays.</p>
+      </div>
+      <div class="modal-body">
+        <form id="formAlerts" class="modal-form">
+          <div class="form-group">
+            <div class="form-label-row">
+              <span>Alert Threshold</span>
+              <span id="alertThresholdVal" class="value-badge">&gt; 15 min delay</span>
+            </div>
+            <input type="range" id="alertThresholdInput" class="slider-input" min="5" max="60" step="5" value="15">
+          </div>
+          <div class="form-field" style="margin-top: 6px;">
+            <label class="remember-label">
+              <input type="checkbox" id="alertEmailCheck" checked> Email notifications for major signal delays
+            </label>
+          </div>
+          <div class="form-field">
+            <label class="remember-label">
+              <input type="checkbox" id="alertPushCheck" checked> In-browser live ETA change pings
+            </label>
+          </div>
+          <button type="submit" class="btn-modal-submit" style="margin-top: 10px;">Save Alert Preferences</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts Loaded in Order for 100% Offline & file:/// Protocol Compatibility -->
+  <script src="js/data/trains.js"></script>
+  <script src="js/data/api.js"></script>
+  <script src="js/data/liveTrainAdapter.js"></script>
+  <script src="js/engine/delayModel.js"></script>
+  <script src="js/engine/simulation.js"></script>
+  <script src="js/auth/auth.js"></script>
+  <script src="js/ui/renderers.js"></script>
+  <script src="js/ui/app.js"></script>
+</body>
+</html>
